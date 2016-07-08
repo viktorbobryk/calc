@@ -12,21 +12,23 @@ module.exports = (function () {
 			return [];
 		}
 	};
-	//console.log(getDataFromFile(dbFilePath)[0].classes[1]);
-	var searchByConcreteClass = function (){
+	var getAll = function(){
+		return data;
+	};
+	var searchByConcreteClass = function (fluidity, clas){
 		var result = [];
-		var fluid;
-		for(var i = 0;i < dbFilePath.length;i++){
-			if(dbFilePath[i].fluidity === fluidity){
-				fluid = dbFilePath[i];
+		for(var i = 0; i < data.length;i++){
+			if(data[i].fluidity === fluidity){
+				for(var j = 0; j < data[i].classes; j++){
+					if(data[i].classes[j].clas === clas){
+						result.push(data[i].classes[j]);
+					}
+				};
 			}
+			
 		}
-		for(var j = 0;j < dbFilePath.fluidity.length;j++){
-			if(flyidity.classes.clas === clas){
-				result.push(dbFilePath[i].classes.clas);
-			}
-		}
-		console.log('hello' + result);
+		console.log('hello ' + data[0].classes[1].clas);
+		
 		return result;
 		
 	};
@@ -46,9 +48,11 @@ module.exports = (function () {
 		return result;
 	};
 	var data = getDataFromFile(dbFilePath);
-	console.log(getAllFluidities());
+	//console.log(data);
 	return {
 		searchByConcreteClass: searchByConcreteClass,
-		getAllFluidities: getAllFluidities
+		getAllFluidities: getAllFluidities,
+		getAllClasses: getAllClasses,
+		getAll: getAll
 	};
 })();
