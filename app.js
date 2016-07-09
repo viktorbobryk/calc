@@ -11,7 +11,6 @@ app.get('/', function (req, res) {
     res.send(indexPage.getPage(req.query));
 });
 app.get('/search', function (req, res) {
-  //  req.body = { customer_name: "cu" }
   res.send(indexPage.getPage(req.query));
   });
 app.post('/', function (req, res) {

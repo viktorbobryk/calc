@@ -27,12 +27,11 @@ module.exports = (function () {
 			}
 			
 		}
-		console.log('hello ' + data[0].classes[1].clas);
+		//console.log(' searchByConcreteClass - ' + data[0].classes[1].clas);
 		
 		return result;
 		
 	};
-	//searchByConcreteClass();
 	var getAllFluidities = function () {
 		var result = [];
 		for(var i = 0; i < data.length; i++){
@@ -48,7 +47,7 @@ module.exports = (function () {
 		return result;
 	};
 	var data = getDataFromFile(dbFilePath);
-	//console.log(data);
+	//console.log('var data - ' + data);
 	return {
 		searchByConcreteClass: searchByConcreteClass,
 		getAllFluidities: getAllFluidities,

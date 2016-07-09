@@ -2,7 +2,7 @@ var concreteModule = require('./../modules/concreteModule.js');
 
 module.exports = (function(){
 	var getPage = function (params){
-	//console.log('hello' + params);
+	//console.log('getPage' + params);
 		return '<html>' + getPageHead() + '<body>' + getPageHeader() + getMain(params) + getPageFooter() + '<body>' + '<html>';
 	};
 	 var getPageHead = function(){
@@ -15,14 +15,14 @@ module.exports = (function(){
 		return '<footer></footer>';
 	};
 	var getMain = function(params){
-	//console.log(params);
+	//console.log('getMain - 'params);
 		return '<main><h1>Calculator</h1>' + getForm() + getResultTable(params) + '</main>';
 	};
 	
 	var getResultTable = function (params) {
-	//console.log(params);
+	//console.log('getResultTable - ' + params);
 		var data = getViewData(params);
-		console.log(data);
+		//console.log('var data - ' + data);
 		if(!data.length){
 			return 'nothing found';
 		}
@@ -51,7 +51,7 @@ module.exports = (function(){
 		return (options.length) ? '<select name="fluidity">' + options + '</select>' : '';
 	};
 	var allFluidities = concreteModule.getAllFluidities();
-	//console.log(allFluidities);
+	//console.log('allFluidities - ' + allFluidities);
 	
 	var getClassesSelect = function (clas){
 		var options = '';
@@ -61,10 +61,10 @@ module.exports = (function(){
 		return (options.length) ? '<select name="clas">' + options + '</select>' : '';
 	};
 	var allClasses = concreteModule.getAllClasses();
-	//console.log(allClasses);
+	//console.log('allClasses -' + allClasses);
 	//console.log(getForm());
 	var getViewData = function (params){
-	//console.log(params);
+	//console.log('getViewData - ' + params);
 		if (params.fluidity && params.clas && params.action === 'search'){
 			return concreteModule.searchByConcreteClass(params.fluidity, params.clas);
 		}
@@ -72,6 +72,7 @@ module.exports = (function(){
 			return concreteModule.getAll;
 		}
 	};
+	//console.log('hello + ' + getViewData());
 	return {
 		getPage: getPage
 	};
