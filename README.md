@@ -10,7 +10,6 @@ calc/
 │   └── concreteModule.js
 ├── public/
 │   └── style.css
-│   
 ├── services/
 │   └── logger.js
 ├── tests/
