@@ -1,9 +1,10 @@
 {
-	"name" : "concreteCalculator",
-	"version" : "0.0.0",
-	"dependencies": {
-		"express": "^4.0.0",
-		"body-parser": "^1.8.1",
-                "lodash": "^4.0.0"
-	}
+  "name": "concreteCalculator",
+  "version": "0.0.0",
+  "dependencies": {
+    "body-parser": "^1.8.1",
+    "chart.js": "^2.1.6",
+    "express": "^4.0.0",
+    "lodash": "^4.0.0"
+  }
 }

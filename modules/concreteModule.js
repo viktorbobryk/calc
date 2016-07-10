@@ -19,7 +19,7 @@ module.exports = (function () {
 		var result = [];
 		for(var i = 0; i < data.length;i++){
 			if(data[i].fluidity === fluidity){
-				for(var j = 0; j < data[i].classes; j++){
+				for(var j = 0; j < data[i].classes.length; j++){
 					if(data[i].classes[j].clas === clas){
 						result.push(data[i].classes[j]);
 					}
@@ -27,8 +27,9 @@ module.exports = (function () {
 			}
 			
 		}
-		//console.log(' searchByConcreteClass - ' + data[0].classes[1].clas);
 		
+		//console.log(' searchByConcreteClass - ' + data[0].classes[0].clas);
+		//console.log('result - ' + result);
 		return result;
 		
 	};

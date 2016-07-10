@@ -13,9 +13,8 @@ app.get('/', function (req, res) {
 app.get('/search', function (req, res) {
   res.send(indexPage.getPage(req.query));
   });
-app.post('/', function (req, res) {
-   console.log(req.body);
-  res.send(indexPage.getPage(req.body));
+ app.get('/chart', function (req, res) {
+  res.send(indexPage.getChartData());
 });
 app.listen(3000, function () {
   console.log('concreteCalculator is listening on port 3000!');

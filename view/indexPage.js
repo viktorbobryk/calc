@@ -2,11 +2,11 @@ var concreteModule = require('./../modules/concreteModule.js');
 
 module.exports = (function(){
 	var getPage = function (params){
-	//console.log('getPage' + params);
+	console.log('getPage - ' + params);
 		return '<html>' + getPageHead() + '<body>' + getPageHeader() + getMain(params) + getPageFooter() + '<body>' + '<html>';
 	};
 	 var getPageHead = function(){
-		return '<head>' + '<title>Concrete Calculator</title>' + '<link rel = "stylesheet" href = "http://localhost:3000/public/style.css"/>' + '</head>';
+		return '<head>' + '<title>Concrete Calculator</title>' + '<link rel = "stylesheet" href = "http://localhost:3000/style.css"/>' + '</head>';
 	 };
 	 var getPageHeader = function () {
 		return '<header></header>';
@@ -15,57 +15,64 @@ module.exports = (function(){
 		return '<footer></footer>';
 	};
 	var getMain = function(params){
-	//console.log('getMain - 'params);
+	//console.log('getMain - ' + params.clas);
 		return '<main><h1>Calculator</h1>' + getForm() + getResultTable(params) + '</main>';
 	};
 	
 	var getResultTable = function (params) {
-	//console.log('getResultTable - ' + params);
+	//console.log('params - ' + params.clas);
+	//console.log('getResultTable - ' + params.clas);
 		var data = getViewData(params);
 		//console.log('var data - ' + data);
 		if(!data.length){
 			return 'nothing found';
 		}
-		var result = "<tr><td>Clas</td><td>Cement</td><td>Stone</td><td>Sand</td><td>Water</td></tr>";
+		var result = "<tr><td>Fluidity</td><td>Clas</td><td>Cement</td><td>Stone</td><td>Sand</td><td>Water</td><td>Proportion c/st/sa/w</td></tr>";
 		for(var i = 0; i < data.length; i++){
-			result += "tr" + 
-			"<td>" + data.clas + "</td>" +
-			"<td>" + data.cement + "</td>" +
-			"<td>" + data.stone + "</td>" +
-			"<td>" + data.sand + "</td>" +
-			"<td>" + data .water + "/td" +
-			"/tr";
+			result += "<tr>" +
+			"<td>" + params.fluidity + "</td>" +	
+			"<td>" + data[i].clas + "</td>" +
+			"<td>" + (data[i].cement * params.quantity) + "</td>" +
+			"<td>" + (data[i].stone * params.quantity) + "</td>" +
+			"<td>" + (data[i].sand * params.quantity) + "</td>" +
+			"<td>" + (data[i].water * params.quantity) + "</td>" +
+			"<td>" + (data[i].cement / data[i].cement) + 
+			" / " + (data[i].stone / data[i].cement).toFixed(1) + 
+			" / " + (data[i].sand / data[i].cement).toFixed(1) + 
+			" / " + (data[i].water / data[i].cement).toFixed(1) + "</td>"
+			"</tr>";
 		}
+		//console.log('getResultTable - ' + data[0]);
 		return "<table border='1'>" + result + "</table>"
 	};
 	var getForm = function (){
-		return '<form method="GET" action="search">' +  '<input type="hidden" name="action" value="search"/>' +  '<label>Enter quantity of concrete</label>' + '<input type="text" name="quantity"/>'  + '<br>' + '<br>' +'<label>Select fluidity of concrete</label>' + getFluiditySelect(allFluidities) + '<br>' + '<br>' +'<label>Select class of concrete</label>' +  getClassesSelect(allClasses) +  '<br>' + '<br>' +'<input type="submit" value="розрахувати"/>'
+		return '<form method="GET" action="search">' +  '<input type="hidden" name="action" value="search"/>' +  '<label>Enter quantity of concrete</label>' + '<input type="text" name="quantity" value="1"/>'  + '<br>' + '<br>' +'<label>Select fluidity of concrete</label>' + getFluiditySelect(concreteModule.getAllFluidities()) + '<br>' + '<br>' +'<label>Select class of concrete</label>' +  getClassesSelect(concreteModule.getAllClasses()) +  '<br>' + '<br>' +'<input type="submit" value="розрахувати"/>'
         '</form>'; 	   
 	}
 	
 	var getFluiditySelect = function (fluidity) {
 		var options = '';
 		for (var i = 0; i < fluidity.length; ++i) {
-			options += '<option value="' + fluidity[i] + '">' + '</option>';
+		//console.log(fluidity[i]);
+			options += '<option value="' + fluidity[i] + '">' + fluidity[i] + '</option>';
 		}
 		return (options.length) ? '<select name="fluidity">' + options + '</select>' : '';
 	};
-	var allFluidities = concreteModule.getAllFluidities();
-	//console.log('allFluidities - ' + allFluidities);
 	
 	var getClassesSelect = function (clas){
 		var options = '';
 		for (var i = 0; i < clas.length; ++i) {
-			options += '<option value="' + clas[i] + '">' + '</option>';
+			options += '<option value="' + clas[i] + '">' + clas[i] + '</option>';
 		}
 		return (options.length) ? '<select name="clas">' + options + '</select>' : '';
 	};
-	var allClasses = concreteModule.getAllClasses();
-	//console.log('allClasses -' + allClasses);
-	//console.log(getForm());
+	
 	var getViewData = function (params){
-	//console.log('getViewData - ' + params);
-		if (params.fluidity && params.clas && params.action === 'search'){
+	//console.log('getViewData - ' + params.fluidity);
+		if(!params){
+			return concreteModule.getAll();
+		}
+		if (params.fluidity && params.clas && params.action == 'search'){
 			return concreteModule.searchByConcreteClass(params.fluidity, params.clas);
 		}
 		else{
@@ -73,6 +80,9 @@ module.exports = (function(){
 		}
 	};
 	//console.log('hello + ' + getViewData());
+	
+	
+	
 	return {
 		getPage: getPage
 	};
