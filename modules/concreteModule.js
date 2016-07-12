@@ -38,6 +38,7 @@ module.exports = (function () {
 		for(var i = 0; i < data.length; i++){
 			result.push(data[i].fluidity);
 		}
+		//console.log('result - ' + result.length);
 		return result;
 	};
 	var getAllClasses = function () {
@@ -45,6 +46,7 @@ module.exports = (function () {
 		for(var i = 0; i < data[0].classes.length; i++){
 			result.push(data[0].classes[i].clas);
 		}
+		//console.log('result - ' + result.length);
 		return result;
 	};
 	var data = getDataFromFile(dbFilePath);
