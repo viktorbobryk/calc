@@ -2,7 +2,7 @@ var concreteModule = require('./../modules/concreteModule.js');
 
 module.exports = (function(){
 	var getPage = function (params){
-	console.log('getPage - ' + params);
+	//console.log('getPage - ' + params);
 		return '<html>' + getPageHead() + '<body>' + getPageHeader() + getMain(params) + getPageFooter() + '<body>' + '<html>';
 	};
 	 var getPageHead = function(){
@@ -16,9 +16,23 @@ module.exports = (function(){
 	};
 	var getMain = function(params){
 	//console.log('getMain - ' + params.clas);
-		return '<main><h1>Calculator</h1>' + getForm() + getResultTable(params) + '</main>';
+		return '<main><h1>Calculator</h1>' + getForm() + getResultTable(params) + getCost(params) +'</main>';
 	};
-	
+	var getCost = function(params){
+	var data = getViewData(params);
+	var cost = concreteModule.searchCost();
+	var result = "<tr><td>Cement</td><td>Stone</td><td>Sand</td><td>Water</td></tr>";
+	for(var i = 0; i < data.length; i++){
+		result += "<tr>" +	
+		"<td>" + ((data[i].cement * params.quantity) * cost[0]).toFixed(2) + " grn" + "</td>" +
+		"<td>" + ((data[i].stone * params.quantity) * cost[1]).toFixed(2) + " grn" + "</td>" +
+		"<td>" + ((data[i].sand * params.quantity) * cost[2]).toFixed(2) + " grn" + "</td>" +
+		"<td>" + ((data[i].water * params.quantity) * cost[3]).toFixed(2) + " grn" + "</td>" +
+		"</tr>";
+	}
+	//console.log('cost - ' + cost);
+	return "<table border='1'>" + result + "</table>"
+	};
 	var getResultTable = function (params) {
 	//console.log('params - ' + params.clas);
 	//console.log('getResultTable - ' + params.clas);

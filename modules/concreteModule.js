@@ -2,6 +2,7 @@ var fs = require('fs');
 var logger = require('./../services/Logger.js');
 module.exports = (function () {
 	var dbFilePath = './data/data.json';
+	var costPath = './data/cost.json';
 	var getDataFromFile = function (path){
 		try{
 		var result = fs.readFileSync(path, 'utf8');
@@ -15,6 +16,7 @@ module.exports = (function () {
 	var getAll = function(){
 		return data;
 	};
+	
 	var searchByConcreteClass = function (fluidity, clas){
 		var result = [];
 		for(var i = 0; i < data.length;i++){
@@ -28,11 +30,23 @@ module.exports = (function () {
 			
 		}
 		
-		//console.log(' searchByConcreteClass - ' + data[0].classes[0].clas);
+		//console.log(' searchByConcreteClass - ' + data);
 		//console.log('result - ' + result);
 		return result;
 		
 	};
+	
+	var searchCost = function(){
+		var result = [];
+		for(key in cost){
+			if(cost.hasOwnProperty(key)){
+				 result.push(cost[key]);
+			}
+		}
+		return result;
+	};
+	//console.log(searchCost());
+	
 	var getAllFluidities = function () {
 		var result = [];
 		for(var i = 0; i < data.length; i++){
@@ -41,6 +55,7 @@ module.exports = (function () {
 		//console.log('result - ' + result.length);
 		return result;
 	};
+	
 	var getAllClasses = function () {
 		var result = [];
 		for(var i = 0; i < data[0].classes.length; i++){
@@ -49,9 +64,14 @@ module.exports = (function () {
 		//console.log('result - ' + result.length);
 		return result;
 	};
+	
 	var data = getDataFromFile(dbFilePath);
 	//console.log('var data - ' + data);
+	var cost = getDataFromFile(costPath);
+	//console.log('var cost - ' + cost.length);
+	
 	return {
+		searchCost: searchCost,
 		searchByConcreteClass: searchByConcreteClass,
 		getAllFluidities: getAllFluidities,
 		getAllClasses: getAllClasses,
