@@ -1,0 +1,47 @@
+body{
+	background-image:url(./images/concrete4.jpg);
+	color:#fff;
+	font-size:1.5em;
+}
+h1{
+	text-align:center;
+}
+form{
+	text-align:center;
+}
+form input{
+	width:35px;
+}
+form input[type="submit"]{
+	width:160px;
+	font-size:1em;
+	background:#2F4F4F;
+	color:#fff;
+	margin-bottom:60px;
+}
+form input[type="submit"]:hover{
+	cursor:pointer;
+	background:#D3D3D3;
+	color:#000;
+	
+}
+ form div {
+    display: table;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top:30px;
+    margin-bottom:30px;
+	background-color:#2F4F4F;
+}
+ .container{
+	margin:60px;
+	border:3px solid black;
+	border-radius:10px;
+	background-color:green;
+}
+
+form div table{
+	font-size:1em;
+	overflow-wrap: break-word;
+}
+	

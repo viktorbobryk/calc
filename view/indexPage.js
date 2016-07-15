@@ -3,10 +3,10 @@ var concreteModule = require('./../modules/concreteModule.js');
 module.exports = (function(){
 	var getPage = function (params){
 	//console.log('getPage - ' + params);
-		return '<html>' + getPageHead() + '<body>' + getPageHeader() + getMain(params) + getPageFooter() + '<body>' + '<html>';
+		return '<html>' + getPageHead() + '<body>' + getPageHeader() + getMain(params) +  getPageFooter() + '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>' + '<body>' + '<html>';
 	};
 	 var getPageHead = function(){
-		return '<head>' + '<title>Concrete Calculator</title>' + '<link rel = "stylesheet" href = "http://localhost:3000/style.css"/>' + '</head>';
+		return '<head>' + '<title>Concrete Калькулятор складу бетону</title>' + '<link rel = "stylesheet" href = "http://localhost:3000/style.css"/>' + '<link rel = "stylesheet" href = "http://localhost:3000/media.css"/>' +'</head>';
 	 };
 	 var getPageHeader = function () {
 		return '<header></header>';
@@ -16,22 +16,23 @@ module.exports = (function(){
 	};
 	var getMain = function(params){
 	//console.log('getMain - ' + params.clas);
-		return '<main><h1>Calculator</h1>' + getForm() + getResultTable(params) + getCost(params) +'</main>';
+		return '<main><div class="container"><h1>Калькулятор складу бетону</h1>'+ getForm() + getResultTable(params) + getProportionTable(params) + getCost(params) + '</div></main>';
 	};
+
 	var getCost = function(params){
 	var data = getViewData(params);
 	var cost = concreteModule.searchCost();
-	var result = "<tr><td>Cement</td><td>Stone</td><td>Sand</td><td>Water</td></tr>";
+	var result = "<tr><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td></tr>";
 	for(var i = 0; i < data.length; i++){
 		result += "<tr>" +	
-		"<td>" + ((data[i].cement * params.quantity) * cost[0]).toFixed(2) + " grn" + "</td>" +
-		"<td>" + ((data[i].stone * params.quantity) * cost[1]).toFixed(2) + " grn" + "</td>" +
-		"<td>" + ((data[i].sand * params.quantity) * cost[2]).toFixed(2) + " grn" + "</td>" +
-		"<td>" + ((data[i].water * params.quantity) * cost[3]).toFixed(2) + " grn" + "</td>" +
+		"<td>" + ((data[i].cement * params.quantity) * cost[0]).toFixed(2) +  "</td>" +
+		"<td>" + ((data[i].stone * params.quantity) * cost[1]).toFixed(2) +  "</td>" +
+		"<td>" + ((data[i].sand * params.quantity) * cost[2]).toFixed(2) +  "</td>" +
+		"<td>" + ((data[i].water * params.quantity) * cost[3]).toFixed(2) +  "</td>" +
 		"</tr>";
 	}
 	//console.log('cost - ' + cost);
-	return "<table border='1'>" + result + "</table>"
+	return "<div>" + "<h4>Вартість, грн.</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
 	};
 	var getResultTable = function (params) {
 	//console.log('params - ' + params.clas);
@@ -39,9 +40,9 @@ module.exports = (function(){
 		var data = getViewData(params);
 		//console.log('var data - ' + data);
 		if(!data.length){
-			return 'nothing found';
+			return [];
 		}
-		var result = "<tr><td>Fluidity</td><td>Clas</td><td>Cement</td><td>Stone</td><td>Sand</td><td>Water</td><td>Proportion c/st/sa/w</td></tr>";
+		var result = "<tr><td>Текучість</td><td>Марка</td><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td></tr>";
 		for(var i = 0; i < data.length; i++){
 			result += "<tr>" +
 			"<td>" + params.fluidity + "</td>" +	
@@ -50,17 +51,35 @@ module.exports = (function(){
 			"<td>" + (data[i].stone * params.quantity) + "</td>" +
 			"<td>" + (data[i].sand * params.quantity) + "</td>" +
 			"<td>" + (data[i].water * params.quantity) + "</td>" +
-			"<td>" + (data[i].cement / data[i].cement) + 
-			" / " + (data[i].stone / data[i].cement).toFixed(1) + 
-			" / " + (data[i].sand / data[i].cement).toFixed(1) + 
-			" / " + (data[i].water / data[i].cement).toFixed(1) + "</td>"
 			"</tr>";
 		}
 		//console.log('getResultTable - ' + data[0]);
-		return "<table border='1'>" + result + "</table>"
+		return "<div>" + "<h4>Кількість матеріалів, кг</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
+	};
+	var getProportionTable = function (params) {
+	//console.log('params - ' + params.clas);
+	//console.log('getResultTable - ' + params.clas);
+		var data = getViewData(params);
+		//console.log('var data - ' + data);
+		if(!data.length){
+			return [];
+		}
+		var result = "<tr><td>Текучість</td><td>Марка</td><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td></tr>";
+		for(var i = 0; i < data.length; i++){
+			result += "<tr>" +
+			"<td>" + params.fluidity + "</td>" +	
+			"<td>" + data[i].clas + "</td>" +
+			"<td>" + (data[i].cement / data[i].cement) + "</td>" +
+			"<td>" + (data[i].stone / data[i].cement).toFixed(1) + "</td>" +
+			"<td>" + (data[i].sand / data[i].cement).toFixed(1) + "</td>" +
+			"<td>" + (data[i].water / data[i].cement).toFixed(1) + "</td>"
+			"</tr>";
+		}
+		//console.log('getResultTable - ' + data[0]);
+		return "<div>" + "<h4>Співвідношення по масі</h4>" +"<table border='1'>" + result + "</table>" + "</div>";
 	};
 	var getForm = function (){
-		return '<form method="GET" action="search">' +  '<input type="hidden" name="action" value="search"/>' +  '<label>Enter quantity of concrete</label>' + '<input type="text" name="quantity" value="1"/>'  + '<br>' + '<br>' +'<label>Select fluidity of concrete</label>' + getFluiditySelect(concreteModule.getAllFluidities()) + '<br>' + '<br>' +'<label>Select class of concrete</label>' +  getClassesSelect(concreteModule.getAllClasses()) +  '<br>' + '<br>' +'<input type="submit" value="розрахувати"/>'
+		return '<form method="GET" action="search">' +  '<input type="hidden" name="action" value="search"/>' +  '<label>Введіть кількість бетону </label>' + '<input type="text" name="quantity" value="1"/>'  + '<br>' + '<br>' +'<label>Виберіть текучість бетону  </label>' + getFluiditySelect(concreteModule.getAllFluidities()) + '<br>' + '<br>' +'<label>Виберіть марку  бетону </label>' +  getClassesSelect(concreteModule.getAllClasses()) +  '<br>' + '<br>' +'<input type="submit" value="розрахувати"/>'
         '</form>'; 	   
 	}
 	
