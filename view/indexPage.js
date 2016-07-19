@@ -1,9 +1,13 @@
 var concreteModule = require('./../modules/concreteModule.js');
-
 module.exports = (function(){
 	var getPage = function (params){
 	//console.log('getPage - ' + params);
-		return '<html>' + getPageHead() + '<body>' + getPageHeader() + getMain(params) +  getPageFooter() + '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>' + '<body>' + '<html>';
+		return '<html>' + getPageHead() + '<body>' + 
+		getPageHeader() + getMain(params) + 
+		 getPageFooter() + 
+		 '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>' + 
+		 '<body>' + 
+		 '<html>';
 	};
 	 var getPageHead = function(){
 		return '<head>' + '<title>Concrete Калькулятор складу бетону</title>' + '<link rel = "stylesheet" href = "http://localhost:3000/style.css"/>' + '<link rel = "stylesheet" href = "http://localhost:3000/media.css"/>' +'</head>';
@@ -16,7 +20,20 @@ module.exports = (function(){
 	};
 	var getMain = function(params){
 	//console.log('getMain - ' + params.clas);
-		return '<main><div class="container"><h1>Калькулятор складу бетону</h1>'+ getForm() + getResultTable(params) + getProportionTable(params) + getCost(params) + '</div></main>';
+		return '<main><div class="container"><h1>Калькулятор складу бетону</h1>'+
+		 getForm() + 
+		 getResultTable(params) + 
+		 getProportionTable(params) + 
+		 getCost(params) + myChart(params) +
+		 '</div><canvas id="c-chart" width="600" height="400"></canvas>' + 
+		 
+		 '</main>';
+	};
+
+	var myChart = function(params){
+		var context = document.getElementById("c-chart");
+            var chart = new Chart(context, getChartData(params));
+		return chart;
 	};
 
 	var getCost = function(params){
@@ -60,7 +77,7 @@ module.exports = (function(){
 	//console.log('params - ' + params.clas);
 	//console.log('getResultTable - ' + params.clas);
 		var data = getViewData(params);
-		//console.log('var data - ' + data);
+		//console.log('var data - ' + data.length);
 		if(!data.length){
 			return [];
 		}
@@ -77,6 +94,51 @@ module.exports = (function(){
 		}
 		//console.log('getResultTable - ' + data[0]);
 		return "<div>" + "<h4>Співвідношення по масі</h4>" +"<table border='1'>" + result + "</table>" + "</div>";
+	};
+	var getChartData = function (params) {
+		var data = getViewData(params);
+		//console.log("data - " + data);
+		var counter = 0;
+		var labels = [];
+		var dataStat = [];
+		var backGroundColor = [];
+		if(!data.length){
+			return [];
+		}
+		for(var i in data){
+			//console.log("key - " + name + " value - " + data[i]);
+			var value = data[i];
+			for(var j in value){
+				counter ++;
+				//console.log("key - " + j + " value - " + value[j]);
+				if(counter > 1){
+					labels.push(j);
+					dataStat.push(value[j]) ;
+					backGroundColor.push('rgba(255, 255, 0, 0.8)');
+					console.log(counter);
+				}
+			}
+		}
+		console.log("labels - " + labels);
+		console.log("dataStat - " + dataStat);
+
+		return {
+			type: "bar",
+			data: {
+				labels: labels,
+				datasets: [
+					{
+
+						label: "Datasheet 1",
+						data: dataStat,
+						backGroundColor: backGroundColor
+					}
+				]
+			},
+			options: {
+				resposive: false
+			}
+		};
 	};
 	var getForm = function (){
 		return '<form method="GET" action="search">' +  '<input type="hidden" name="action" value="search"/>' +  '<label>Введіть кількість бетону </label>' + '<input type="text" name="quantity" value="1"/>'  + '<br>' + '<br>' +'<label>Виберіть текучість бетону  </label>' + getFluiditySelect(concreteModule.getAllFluidities()) + '<br>' + '<br>' +'<label>Виберіть марку  бетону </label>' +  getClassesSelect(concreteModule.getAllClasses()) +  '<br>' + '<br>' +'<input type="submit" value="розрахувати"/>'
@@ -103,7 +165,7 @@ module.exports = (function(){
 	var getViewData = function (params){
 	//console.log('getViewData - ' + params.fluidity);
 		if(!params){
-			return concreteModule.getAll();
+			return concreteModule.getAll() + "fff";
 		}
 		if (params.fluidity && params.clas && params.action == 'search'){
 			return concreteModule.searchByConcreteClass(params.fluidity, params.clas);
