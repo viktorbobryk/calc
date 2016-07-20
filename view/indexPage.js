@@ -4,7 +4,7 @@ module.exports = (function(){
 	//console.log('getPage - ' + params);
 		return '<html>' + getPageHead() + '<body>' + 
 		getPageHeader() + getMain(params) + 
-		 getPageFooter() + 
+		 getPageFooter() + myChart()
 		 '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>' + 
 		 '<body>' + 
 		 '<html>';
@@ -24,7 +24,7 @@ module.exports = (function(){
 		 getForm() + 
 		 getResultTable(params) + 
 		 getProportionTable(params) + 
-		 getCost(params) + myChart(params) +
+		 getCost(params) + 
 		 '</div><canvas id="c-chart" width="600" height="400"></canvas>' + 
 		 
 		 '</main>';
