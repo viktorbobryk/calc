@@ -2,9 +2,9 @@ var concreteModule = require('./../modules/concreteModule.js');
 module.exports = (function(){
 	var getPage = function (params){
 	//console.log('getPage - ' + params);
-		return '<html>' + getPageHead() + '<body>' + 
+		return   '<html>' + getPageHead() + '<body>' + 
 		getPageHeader() + getMain(params) + 
-		 getPageFooter() + myChart()
+		 getPageFooter() +
 		 '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>' + 
 		 '<body>' + 
 		 '<html>';
@@ -24,17 +24,17 @@ module.exports = (function(){
 		 getForm() + 
 		 getResultTable(params) + 
 		 getProportionTable(params) + 
-		 getCost(params) + 
+		 getCost(params) + addRecord(params) +
 		 '</div><canvas id="c-chart" width="600" height="400"></canvas>' + 
 		 
 		 '</main>';
 	};
-
-	var myChart = function(params){
-		var context = document.getElementById("c-chart");
-            var chart = new Chart(context, getChartData(params));
-		return chart;
-	};
+	var addRecord = function(params){
+		var record = JSON.stringify({'Марка бетону ': params.clas, 'Текучість ': params.fluidity, 'Дата': concreteModule.getDate()});
+		
+		console.log(record);
+		  return concreteModule.addRecord(record);
+		}
 
 	var getCost = function(params){
 	var data = getViewData(params);
@@ -95,53 +95,9 @@ module.exports = (function(){
 		//console.log('getResultTable - ' + data[0]);
 		return "<div>" + "<h4>Співвідношення по масі</h4>" +"<table border='1'>" + result + "</table>" + "</div>";
 	};
-	var getChartData = function (params) {
-		var data = getViewData(params);
-		//console.log("data - " + data);
-		var counter = 0;
-		var labels = [];
-		var dataStat = [];
-		var backGroundColor = [];
-		if(!data.length){
-			return [];
-		}
-		for(var i in data){
-			//console.log("key - " + name + " value - " + data[i]);
-			var value = data[i];
-			for(var j in value){
-				counter ++;
-				//console.log("key - " + j + " value - " + value[j]);
-				if(counter > 1){
-					labels.push(j);
-					dataStat.push(value[j]) ;
-					backGroundColor.push('rgba(255, 255, 0, 0.8)');
-					console.log(counter);
-				}
-			}
-		}
-		console.log("labels - " + labels);
-		console.log("dataStat - " + dataStat);
-
-		return {
-			type: "bar",
-			data: {
-				labels: labels,
-				datasets: [
-					{
-
-						label: "Datasheet 1",
-						data: dataStat,
-						backGroundColor: backGroundColor
-					}
-				]
-			},
-			options: {
-				resposive: false
-			}
-		};
-	};
+	
 	var getForm = function (){
-		return '<form method="GET" action="search">' +  '<input type="hidden" name="action" value="search"/>' +  '<label>Введіть кількість бетону </label>' + '<input type="text" name="quantity" value="1"/>'  + '<br>' + '<br>' +'<label>Виберіть текучість бетону  </label>' + getFluiditySelect(concreteModule.getAllFluidities()) + '<br>' + '<br>' +'<label>Виберіть марку  бетону </label>' +  getClassesSelect(concreteModule.getAllClasses()) +  '<br>' + '<br>' +'<input type="submit" value="розрахувати"/>'
+		return '<form method="GET" action="search">' +  '<input type="hidden" name="action" value="search"/>' +  '<label> Кількість бетону </label>' + '<input type="text" name="quantity" value="1"/>'  + '<br>' + '<br>' +'<label><span class="help">?  <span class="helptext">Текучість(рухомість) - здатність бетону заповнювати форми в які його заливають. Зазвичай використовують бетон текучість якого становить П1 - П2.Щоб покращити заповнення форми таким бетоном використовують вібрацію і ущільнення.Для складних форм і при неможлиивості бібрування або для подачі бетону насосом використовують П3 - П4, вартість такого бетону вища.</span></span>Текучість бетону  </label>' + getFluiditySelect(concreteModule.getAllFluidities()) + '<br>' + '<br>' +'<label><span class="help">? <span class="helptext">М100 - для заливки підбетонки(основа під фундамент) М150 - для фундаментів під легкі паркани, будинки із дерева, для гаражів і с/г приміщень. М200 - для фундаментів одно і двоповерховихбудинків із легким міжетажним перекриттям. М250/М300 - для фундаментів великих приватних будинків. М400 і вище - для будівництва висотних будинків і монолітних перекриттів.</span></span>Марка  бетону </label>' +  getClassesSelect(concreteModule.getAllClasses()) +  '<br>' + '<br>' +'<input type="submit" value="розрахувати"/>'
         '</form>'; 	   
 	}
 	

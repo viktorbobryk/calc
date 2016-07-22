@@ -1,6 +1,6 @@
 body{
 	background-image:url(./images/concrete4.jpg);
-	color:#fff;
+	color:#020500;
 	font-size:1.5em;
 }
 h1{
@@ -15,14 +15,14 @@ form input{
 form input[type="submit"]{
 	width:160px;
 	font-size:1em;
-	background:#2F4F4F;
-	color:#fff;
+	background:#AEADBA;
+	color:#020500;
 	margin-bottom:60px;
 }
 form input[type="submit"]:hover{
 	cursor:pointer;
-	background:#D3D3D3;
-	color:#000;
+	background:#2C2C30;
+	color:#fff;
 	
 }
  form div {
@@ -31,7 +31,16 @@ form input[type="submit"]:hover{
     margin-left: auto;
     margin-top:30px;
     margin-bottom:30px;
-	background-color:#2F4F4F;
+	background-color:#AEADBA;
+	
+}
+table{
+	border-collapse: collapse;
+}
+canvas {
+	 display: table;
+    margin-right: auto;
+    margin-left: auto;
 }
  .container{
 	margin:60px;
@@ -44,4 +53,50 @@ form div table{
 	font-size:1em;
 	overflow-wrap: break-word;
 }
-	
+span{
+	font-weight: bolder;
+	color: yellow;
+	margin-right: 10px;
+}
+span:hover{
+	color: red;
+	cursor: pointer;
+}
+.help{
+	position:relative;
+	display: inline-block;
+
+}
+.help .helptext{
+	visibility: hidden;
+	width: 180px;
+	background-color:#AEADBA;
+	color:#000;
+	text-align: center;
+	border: 1px solid black;
+	border-radius: 6px;
+	padding: 3px 0;
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    right: 105%;
+    margin-left: -60px;
+    font-size: 0.7em;
+    font-weight: normal;
+}
+.help .helptext:after{
+	content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.help:hover .helptext{
+	visibility: visible;
+}
+true{
+	display: hidden;
+}

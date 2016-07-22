@@ -3,6 +3,7 @@ var logger = require('./../services/Logger.js');
 module.exports = (function () {
 	var dbFilePath = './data/data.json';
 	var costPath = './data/cost.json';
+	var historyPath = './data/history.json';
 	var getDataFromFile = function (path){
 		try{
 		var result = fs.readFileSync(path, 'utf8');
@@ -16,6 +17,34 @@ module.exports = (function () {
 	var getAll = function(){
 		return data;
 	};
+
+	var addRecord = function(record){
+		           
+            try {
+                fs.writeFileSync(
+                    historyPath, 
+                    JSON.stringify(record), 
+                    { flag: 'w+' }
+                );   
+               
+            } catch(e) {
+                logger.logError('Failed saving data to file, data: ' + 
+                        JSON.stringify(record));
+                return false;
+            }
+            return true;
+	}
+	var getDate = function (){
+		var formattedDate = '';
+		var date = new Date();
+		 formattedDate += date.getFullYear() + "-";
+            formattedDate += date.getMonth() + 1 + "-";
+            formattedDate += date.getDate() + " ";
+            formattedDate += date.getHours() + ":";
+            formattedDate += date.getMinutes() + ":";
+            formattedDate += date.getSeconds();
+            return formattedDate;
+        };
 	
 	var searchByConcreteClass = function (fluidity, clas){
 		var result = [];
@@ -75,6 +104,8 @@ module.exports = (function () {
 		searchByConcreteClass: searchByConcreteClass,
 		getAllFluidities: getAllFluidities,
 		getAllClasses: getAllClasses,
-		getAll: getAll
+		getAll: getAll,
+		getDate: getDate,
+		addRecord: addRecord
 	};
 })();
