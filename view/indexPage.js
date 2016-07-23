@@ -20,20 +20,21 @@ module.exports = (function(){
 	};
 	var getMain = function(params){
 	//console.log('getMain - ' + params.clas);
+	addRecord(params);
 		return '<main><div class="container"><h1>Калькулятор складу бетону</h1>'+
 		 getForm() + 
 		 getResultTable(params) + 
 		 getProportionTable(params) + 
-		 getCost(params) + addRecord(params) +
+		 getCost(params) + 
 		 '</div><canvas id="c-chart" width="600" height="400"></canvas>' + 
 		 
 		 '</main>';
 	};
 	var addRecord = function(params){
-		var record = JSON.stringify({'Марка бетону ': params.clas, 'Текучість ': params.fluidity, 'Дата': concreteModule.getDate()});
+		var record = {'Марка бетону ': params.clas, 'Текучість ': params.fluidity, 'Дата': concreteModule.getDate()};
 		
 		console.log(record);
-		  return concreteModule.addRecord(record);
+		  concreteModule.addRecord(record);
 		}
 
 	var getCost = function(params){

@@ -18,12 +18,16 @@ module.exports = (function () {
 		return data;
 	};
 
+
 	var addRecord = function(record){
+		history = getDataFromFile(historyPath);
+
+		history.push(record);
 		           
             try {
                 fs.writeFileSync(
                     historyPath, 
-                    JSON.stringify(record), 
+                    JSON.stringify(history), 
                     { flag: 'w+' }
                 );   
                
@@ -32,6 +36,7 @@ module.exports = (function () {
                         JSON.stringify(record));
                 return false;
             }
+            
             return true;
 	}
 	var getDate = function (){
