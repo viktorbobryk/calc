@@ -40,13 +40,15 @@ module.exports = (function(){
 	var getCost = function(params){
 	var data = getViewData(params);
 	var cost = concreteModule.searchCost();
-	var result = "<tr><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td></tr>";
+	var result = "<tr><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td><td>Разом</td></tr>";
 	for(var i = 0; i < data.length; i++){
 		result += "<tr>" +	
 		"<td>" + ((data[i].cement * params.quantity) * cost[0]).toFixed(2) +  "</td>" +
 		"<td>" + ((data[i].stone * params.quantity) * cost[1]).toFixed(2) +  "</td>" +
 		"<td>" + ((data[i].sand * params.quantity) * cost[2]).toFixed(2) +  "</td>" +
 		"<td>" + ((data[i].water * params.quantity) * cost[3]).toFixed(2) +  "</td>" +
+		"<td>" + (((data[i].cement * cost[0]) + (data[i].stone * cost[1]) + (data[i].sand * cost[2]) + (data[i].water * cost[3])) * params.quantity).toFixed(2)
+		"</td>" +
 		"</tr>";
 	}
 	//console.log('cost - ' + cost);
