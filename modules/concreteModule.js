@@ -10,7 +10,7 @@ module.exports = (function () {
 		return JSON.parse(result);
 		} 
 		catch(e) {
-			logger.logError('Can not read from file');
+			logger.logError('Can not read from file "./data/data.json"');
 			return [];
 		}
 	};
@@ -39,6 +39,23 @@ module.exports = (function () {
             
             return true;
 	}
+
+	 var validateParams = function (params) {
+            
+            return (
+                    (params.quantity && params.quantity.match(/[0-9]$/))
+                    
+                );
+        };
+    var paramsLength = function(params){
+		var count = 0;
+    	for(var i in params){
+        if(params.hasOwnProperty(i))
+            count++;
+    	}
+    	return count;
+	}
+	    
 	var getDate = function (){
 		var formattedDate = '';
 		var date = new Date();
@@ -111,6 +128,8 @@ module.exports = (function () {
 		getAllClasses: getAllClasses,
 		getAll: getAll,
 		getDate: getDate,
-		addRecord: addRecord
+		addRecord: addRecord,
+		validateParams: validateParams,
+		paramsLength: paramsLength
 	};
 })();

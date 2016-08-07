@@ -17,7 +17,7 @@ app.get('/search', function (req, res) {
 });
 
 app.get('/chart', function (req, res) {
-  res.send(appVievs.getChartData(req.query));
+  res.send(indexPage.getChart(req.query));
 });
 
 app.listen(3000, function () {

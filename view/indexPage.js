@@ -3,9 +3,10 @@ module.exports = (function(){
 	var getPage = function (params){
 	//console.log('getPage - ' + params);
 		return   '<html>' + getPageHead() + '<body>' + 
-		getPageHeader() + getMain(params) + 
+		getPageHeader() + getMain(params) +
+		// getChart() +
 		 getPageFooter() +
-		 '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>' + 
+		 '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.min.js"></script>' + 
 		 '<body>' + 
 		 '<html>';
 	};
@@ -22,81 +23,99 @@ module.exports = (function(){
 	//console.log('getMain - ' + params.clas);
 	addRecord(params);
 		return '<main><div class="container"><h1>Калькулятор складу бетону</h1>'+
-		 getForm() + 
-		 getResultTable(params) + 
-		 getProportionTable(params) + 
-		 getCost(params) + 
-		 '</div><canvas id="c-chart" width="600" height="400"></canvas>' + 
-		 
-		 '</main>';
+		getMessage(params) +	
+		getForm() + 
+		getResultTable(params) + 
+		getProportionTable(params) + 
+		getCost(params) + 
+		'</div></main>';
 	};
 	var addRecord = function(params){
 		var record = {'Марка бетону ': params.clas, 'Текучість ': params.fluidity, 'Дата': concreteModule.getDate()};
 		
-		console.log(record);
+		//console.log(record);
 		  concreteModule.addRecord(record);
 		}
 
 	var getCost = function(params){
-	var data = getViewData(params);
-	var cost = concreteModule.searchCost();
-	var result = "<tr><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td><td>Разом</td></tr>";
-	for(var i = 0; i < data.length; i++){
-		result += "<tr>" +	
-		"<td>" + ((data[i].cement * params.quantity) * cost[0]).toFixed(2) +  "</td>" +
-		"<td>" + ((data[i].stone * params.quantity) * cost[1]).toFixed(2) +  "</td>" +
-		"<td>" + ((data[i].sand * params.quantity) * cost[2]).toFixed(2) +  "</td>" +
-		"<td>" + ((data[i].water * params.quantity) * cost[3]).toFixed(2) +  "</td>" +
-		"<td>" + (((data[i].cement * cost[0]) + (data[i].stone * cost[1]) + (data[i].sand * cost[2]) + (data[i].water * cost[3])) * params.quantity).toFixed(2)
-		"</td>" +
-		"</tr>";
+	var paramsLength = concreteModule.paramsLength(params);
+	if(paramsLength === 0){
+			return '';
 	}
-	//console.log('cost - ' + cost);
-	return "<div>" + "<h4>Вартість, грн.</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
+	else if(paramsLength > 0){	
+		var data = getViewData(params);
+		var cost = concreteModule.searchCost();
+		var result = "<tr><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td><td>Разом</td></tr>";
+			for(var i = 0; i < data.length; i++){
+				result += "<tr>" +	
+				"<td>" + ((data[i].cement * params.quantity) * cost[0]).toFixed(2) +  "</td>" +
+				"<td>" + ((data[i].stone * params.quantity) * cost[1]).toFixed(2) +  "</td>" +
+				"<td>" + ((data[i].sand * params.quantity) * cost[2]).toFixed(2) +  "</td>" +
+				"<td>" + ((data[i].water * params.quantity) * cost[3]).toFixed(2) +  "</td>" +
+				"<td>" + (((data[i].cement * cost[0]) + (data[i].stone * cost[1]) + (data[i].sand * cost[2]) + (data[i].water * cost[3])) * params.quantity).toFixed(2)
+				"</td>" +
+				"</tr>";
+			}
+		
+		//console.log('cost - ' + cost);
+		return "<div>" + "<h4>Вартість, грн.</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
+	}
 	};
 	var getResultTable = function (params) {
-	//console.log('params - ' + params.clas);
-	//console.log('getResultTable - ' + params.clas);
-		var data = getViewData(params);
-		//console.log('var data - ' + data);
-		if(!data.length){
-			return [];
+		var paramsLength = concreteModule.paramsLength(params);
+		if(paramsLength === 0){
+				return '';
 		}
-		var result = "<tr><td>Текучість</td><td>Марка</td><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td></tr>";
-		for(var i = 0; i < data.length; i++){
-			result += "<tr>" +
-			"<td>" + params.fluidity + "</td>" +	
-			"<td>" + data[i].clas + "</td>" +
-			"<td>" + (data[i].cement * params.quantity) + "</td>" +
-			"<td>" + (data[i].stone * params.quantity) + "</td>" +
-			"<td>" + (data[i].sand * params.quantity) + "</td>" +
-			"<td>" + (data[i].water * params.quantity) + "</td>" +
-			"</tr>";
+		else if(paramsLength > 0){
+			//console.log('params - ' + params.clas);
+			//console.log('getResultTable - ' + params.clas);
+			var data = getViewData(params);
+			//console.log('var data - ' + data);
+			if(!data.length){
+				return [];
+			}
+			var result = "<tr><td>Текучість</td><td>Марка</td><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td></tr>";
+			for(var i = 0; i < data.length; i++){
+				result += "<tr>" +
+				"<td>" + params.fluidity + "</td>" +	
+				"<td>" + data[i].clas + "</td>" +
+				"<td>" + (data[i].cement * params.quantity) + "</td>" +
+				"<td>" + (data[i].stone * params.quantity) + "</td>" +
+				"<td>" + (data[i].sand * params.quantity) + "</td>" +
+				"<td>" + (data[i].water * params.quantity) + "</td>" +
+				"</tr>";
+			}
+			//console.log('getResultTable - ' + data[0]);
+			return "<div>" + "<h4>Кількість матеріалів, кг</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
 		}
-		//console.log('getResultTable - ' + data[0]);
-		return "<div>" + "<h4>Кількість матеріалів, кг</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
 	};
 	var getProportionTable = function (params) {
-	//console.log('params - ' + params.clas);
-	//console.log('getResultTable - ' + params.clas);
-		var data = getViewData(params);
-		//console.log('var data - ' + data.length);
-		if(!data.length){
-			return [];
+		var paramsLength = concreteModule.paramsLength(params);
+		if(paramsLength === 0){
+				return '';
 		}
-		var result = "<tr><td>Текучість</td><td>Марка</td><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td></tr>";
-		for(var i = 0; i < data.length; i++){
-			result += "<tr>" +
-			"<td>" + params.fluidity + "</td>" +	
-			"<td>" + data[i].clas + "</td>" +
-			"<td>" + (data[i].cement / data[i].cement) + "</td>" +
-			"<td>" + (data[i].stone / data[i].cement).toFixed(1) + "</td>" +
-			"<td>" + (data[i].sand / data[i].cement).toFixed(1) + "</td>" +
-			"<td>" + (data[i].water / data[i].cement).toFixed(1) + "</td>"
-			"</tr>";
+		else if(paramsLength > 0){
+			//console.log('params - ' + params.clas);
+			//console.log('getResultTable - ' + params.clas);
+			var data = getViewData(params);
+			//console.log('var data - ' + data.length);
+			if(!data.length){
+				return [];
+			}
+			var result = "<tr><td>Текучість</td><td>Марка</td><td>Цемент</td><td>Щебінь</td><td>Пісок</td><td>Вода</td></tr>";
+			for(var i = 0; i < data.length; i++){
+				result += "<tr>" +
+				"<td>" + params.fluidity + "</td>" +	
+				"<td>" + data[i].clas + "</td>" +
+				"<td>" + (data[i].cement / data[i].cement) + "</td>" +
+				"<td>" + (data[i].stone / data[i].cement).toFixed(1) + "</td>" +
+				"<td>" + (data[i].sand / data[i].cement).toFixed(1) + "</td>" +
+				"<td>" + (data[i].water / data[i].cement).toFixed(1) + "</td>"
+				"</tr>";
+			}
+			//console.log('getResultTable - ' + data[0]);
+			return "<div>" + "<h4>Співвідношення по масі</h4>" +"<table border='1'>" + result + "</table>" + "</div>";
 		}
-		//console.log('getResultTable - ' + data[0]);
-		return "<div>" + "<h4>Співвідношення по масі</h4>" +"<table border='1'>" + result + "</table>" + "</div>";
 	};
 	
 	var getForm = function (){
@@ -134,9 +153,63 @@ module.exports = (function(){
 		}
 	};
 	//console.log('hello + ' + getViewData());
-	
-	
-	
+
+	var getMessage = function (params) {
+		var paramsLength = concreteModule.paramsLength(params);
+		var validateParams = concreteModule.validateParams(params);
+			if(paramsLength === 0){
+				return '';
+			}
+			else if(paramsLength > 0){
+	            if (!validateParams) {
+	               return '<div class="message"> !!! В графі "Кількість бетону" ви ввели не число, перевірте і спробуйте ще раз</div>'; 
+	            } 
+	            	return '';  
+	        }    	 	  	
+        };
+	var getChart = function(){
+		var ctx = '<canvas width="600" height="400"></canvas>';
+		console.log(ctx);
+		var myChart = new Chart(ctx, {
+	    type: 'bar',
+	    data: {
+	        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+	        datasets: [{
+	            label: '# of Votes',
+	            data: [12, 19, 3, 5, 2, 3],
+	            backgroundColor: [
+	                'rgba(255, 99, 132, 0.2)',
+	                'rgba(54, 162, 235, 0.2)',
+	                'rgba(255, 206, 86, 0.2)',
+	                'rgba(75, 192, 192, 0.2)',
+	                'rgba(153, 102, 255, 0.2)',
+	                'rgba(255, 159, 64, 0.2)'
+	            ],
+	            borderColor: [
+	                'rgba(255,99,132,1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)',
+	                'rgba(75, 192, 192, 1)',
+	                'rgba(153, 102, 255, 1)',
+	                'rgba(255, 159, 64, 1)'
+	            ],
+	            borderWidth: 1
+	        }]
+	    },
+	    options: {
+	        scales: {
+	            yAxes: [{
+	                ticks: {
+	                    beginAtZero:true
+	                }
+	            }]
+	        }
+	    }
+	});
+		console.log(myChart);
+	return myChart;
+	};
+
 	return {
 		getPage: getPage
 	};
