@@ -1,17 +1,20 @@
 var concreteModule = require('./../modules/concreteModule.js');
 module.exports = (function(){
 	var getPage = function (params){
-	//console.log('getPage - ' + params);
 		return   '<html>' + getPageHead() + '<body>' + 
 		getPageHeader() + getMain(params) +
-		// getChart() +
+		'<canvas id="chart" width="300" height="200"></canvas>' +
 		 getPageFooter() +
 		 '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.min.js"></script>' + 
+		 '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>' +
+		 '<script type="text/javascript" src="http://localhost:3000/scripts.js"></script>' +
 		 '<body>' + 
 		 '<html>';
 	};
 	 var getPageHead = function(){
-		return '<head>' + '<title>Concrete Калькулятор складу бетону</title>' + '<link rel = "stylesheet" href = "http://localhost:3000/style.css"/>' + '<link rel = "stylesheet" href = "http://localhost:3000/media.css"/>' +'</head>';
+		return '<head>' + '<title>Concrete Калькулятор складу бетону</title>' + 
+		'<link rel = "stylesheet" href = "http://localhost:3000/style.css"/>' + 
+		'<link rel = "stylesheet" href = "http://localhost:3000/media.css"/>' + '</head>';
 	 };
 	 var getPageHeader = function () {
 		return '<header></header>';
@@ -20,7 +23,6 @@ module.exports = (function(){
 		return '<footer></footer>';
 	};
 	var getMain = function(params){
-	//console.log('getMain - ' + params.clas);
 	addRecord(params);
 		return '<main><div class="container"><h1>Калькулятор складу бетону</h1>'+
 		getMessage(params) +	
@@ -30,10 +32,13 @@ module.exports = (function(){
 		getCost(params) + 
 		'</div></main>';
 	};
+	var addChart = function (data) {
+           var ctx = '<canvas id="appartment-chart" width="600" height="400"></canvas>' ;
+            var myChart = new Chart(ctx, JSON.parse('{"type":"bar","data":{"labels":[5,"3","2"],"datasets":[{"label":"Datasheet 1","data":[12,1,1],"backgroundColor":["rgba(0, 0, 255, 0.8)","rgba(0, 0, 255, 0.8)","rgba(0, 255, 0, 0.8)"]}]},"options":{"responsive":false,"scales":{"yAxes":[{"ticks":{"beginAtZero":true}}],"xAxes":[{"display":false}]}}}'));
+        };
 	var addRecord = function(params){
 		var record = {'Марка бетону ': params.clas, 'Текучість ': params.fluidity, 'Дата': concreteModule.getDate()};
 		
-		//console.log(record);
 		  concreteModule.addRecord(record);
 		}
 
@@ -57,20 +62,18 @@ module.exports = (function(){
 				"</tr>";
 			}
 		
-		//console.log('cost - ' + cost);
 		return "<div>" + "<h4>Вартість, грн.</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
 	}
 	};
 	var getResultTable = function (params) {
+		console.log('params rt- ' + params);
 		var paramsLength = concreteModule.paramsLength(params);
 		if(paramsLength === 0){
 				return '';
 		}
 		else if(paramsLength > 0){
-			//console.log('params - ' + params.clas);
-			//console.log('getResultTable - ' + params.clas);
 			var data = getViewData(params);
-			//console.log('var data - ' + data);
+			console.log('data rt- ' + data);
 			if(!data.length){
 				return [];
 			}
@@ -84,8 +87,9 @@ module.exports = (function(){
 				"<td>" + (data[i].sand * params.quantity) + "</td>" +
 				"<td>" + (data[i].water * params.quantity) + "</td>" +
 				"</tr>";
+				console.log(data[i].cement);
 			}
-			//console.log('getResultTable - ' + data[0]);
+
 			return "<div>" + "<h4>Кількість матеріалів, кг</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
 		}
 	};
@@ -95,10 +99,7 @@ module.exports = (function(){
 				return '';
 		}
 		else if(paramsLength > 0){
-			//console.log('params - ' + params.clas);
-			//console.log('getResultTable - ' + params.clas);
 			var data = getViewData(params);
-			//console.log('var data - ' + data.length);
 			if(!data.length){
 				return [];
 			}
@@ -113,7 +114,6 @@ module.exports = (function(){
 				"<td>" + (data[i].water / data[i].cement).toFixed(1) + "</td>"
 				"</tr>";
 			}
-			//console.log('getResultTable - ' + data[0]);
 			return "<div>" + "<h4>Співвідношення по масі</h4>" +"<table border='1'>" + result + "</table>" + "</div>";
 		}
 	};
@@ -126,7 +126,6 @@ module.exports = (function(){
 	var getFluiditySelect = function (fluidity) {
 		var options = '';
 		for (var i = 0; i < fluidity.length; ++i) {
-		//console.log(fluidity[i]);
 			options += '<option value="' + fluidity[i] + '">' + fluidity[i] + '</option>';
 		}
 		return (options.length) ? '<select name="fluidity">' + options + '</select>' : '';
@@ -139,9 +138,54 @@ module.exports = (function(){
 		}
 		return (options.length) ? '<select name="clas">' + options + '</select>' : '';
 	};
+
+	var getChartData = function (params) {
+		console.log('params - ' + params);
+		var chartData = getViewData(params);
+		console.log('chartData - ' + chartData);
+		var counter = 0;
+		var labels = [];
+		var dataStat = [];
+		var backGroundColor = [];
+		if(!chartData.length){
+			return [];
+		}
+		for(var i in chartData){
+			var value = chartData[i];
+			for(var j in value){
+				counter ++;
+				if(counter > 1){
+					labels.push(j);
+					dataStat.push(value[j]) ;
+					backGroundColor.push('rgba(255, 255, 255, 0.8)');
+				}
+				//console.log('counter - ' + counter)
+			}
+		}
+		//console.log("labels - " + labels);
+		//console.log("dataStat - " + dataStat);
+
+		return {
+			type: "bar",
+			data: {
+				labels: labels,
+				datasets: [
+					{
+
+						label: "Datasheet 1",
+						data: dataStat,
+						backGroundColor: backGroundColor
+					}
+				]
+			},
+			options: {
+				resposive: false
+			}
+		};
+	};    
+       
 	
 	var getViewData = function (params){
-	//console.log('getViewData - ' + params.fluidity);
 		if(!params){
 			return concreteModule.getAll() + "fff";
 		}
@@ -152,7 +196,6 @@ module.exports = (function(){
 			return concreteModule.getAll;
 		}
 	};
-	//console.log('hello + ' + getViewData());
 
 	var getMessage = function (params) {
 		var paramsLength = concreteModule.paramsLength(params);
@@ -167,51 +210,10 @@ module.exports = (function(){
 	            	return '';  
 	        }    	 	  	
         };
-	var getChart = function(){
-		var ctx = '<canvas width="600" height="400"></canvas>';
-		console.log(ctx);
-		var myChart = new Chart(ctx, {
-	    type: 'bar',
-	    data: {
-	        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-	        datasets: [{
-	            label: '# of Votes',
-	            data: [12, 19, 3, 5, 2, 3],
-	            backgroundColor: [
-	                'rgba(255, 99, 132, 0.2)',
-	                'rgba(54, 162, 235, 0.2)',
-	                'rgba(255, 206, 86, 0.2)',
-	                'rgba(75, 192, 192, 0.2)',
-	                'rgba(153, 102, 255, 0.2)',
-	                'rgba(255, 159, 64, 0.2)'
-	            ],
-	            borderColor: [
-	                'rgba(255,99,132,1)',
-	                'rgba(54, 162, 235, 1)',
-	                'rgba(255, 206, 86, 1)',
-	                'rgba(75, 192, 192, 1)',
-	                'rgba(153, 102, 255, 1)',
-	                'rgba(255, 159, 64, 1)'
-	            ],
-	            borderWidth: 1
-	        }]
-	    },
-	    options: {
-	        scales: {
-	            yAxes: [{
-	                ticks: {
-	                    beginAtZero:true
-	                }
-	            }]
-	        }
-	    }
-	});
-		console.log(myChart);
-	return myChart;
-	};
-
+	
 	return {
-		getPage: getPage
+		getPage: getPage,
+		getChartData: getChartData
 	};
 	
 })();

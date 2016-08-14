@@ -16,8 +16,8 @@ app.get('/search', function (req, res) {
   res.send(indexPage.getPage(req.query));
 });
 
-app.get('/chart', function (req, res) {
-  res.send(indexPage.getChart(req.query));
+app.get('/chart', function(req, res) {
+	res.send(indexPage.getChartData());
 });
 
 app.listen(3000, function () {

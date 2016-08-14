@@ -1,5 +1,5 @@
 var fs = require('fs');
-var logger = require('./../services/Logger.js');
+var logger = require('./../services/logger.js');
 module.exports = (function () {
 	var dbFilePath = './data/data.json';
 	var costPath = './data/cost.json';
@@ -47,6 +47,7 @@ module.exports = (function () {
                     
                 );
         };
+
     var paramsLength = function(params){
 		var count = 0;
     	for(var i in params){
@@ -80,9 +81,6 @@ module.exports = (function () {
 			}
 			
 		}
-		
-		//console.log(' searchByConcreteClass - ' + data);
-		//console.log('result - ' + result);
 		return result;
 		
 	};
@@ -96,14 +94,12 @@ module.exports = (function () {
 		}
 		return result;
 	};
-	//console.log(searchCost());
 	
 	var getAllFluidities = function () {
 		var result = [];
 		for(var i = 0; i < data.length; i++){
 			result.push(data[i].fluidity);
 		}
-		//console.log('result - ' + result.length);
 		return result;
 	};
 	
@@ -112,14 +108,12 @@ module.exports = (function () {
 		for(var i = 0; i < data[0].classes.length; i++){
 			result.push(data[0].classes[i].clas);
 		}
-		//console.log('result - ' + result.length);
 		return result;
 	};
+
 	
 	var data = getDataFromFile(dbFilePath);
-	//console.log('var data - ' + data);
 	var cost = getDataFromFile(costPath);
-	//console.log('var cost - ' + cost.length);
 	
 	return {
 		searchCost: searchCost,
@@ -131,5 +125,6 @@ module.exports = (function () {
 		addRecord: addRecord,
 		validateParams: validateParams,
 		paramsLength: paramsLength
+
 	};
 })();
