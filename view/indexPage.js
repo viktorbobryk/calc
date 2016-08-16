@@ -3,7 +3,6 @@ module.exports = (function(){
 	var getPage = function (params){
 		return   '<html>' + getPageHead() + '<body>' + 
 		getPageHeader() + getMain(params) +
-		'<canvas id="chart" width="300" height="200"></canvas>' +
 		 getPageFooter() +
 		 '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.min.js"></script>' + 
 		 '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>' +
@@ -30,12 +29,9 @@ module.exports = (function(){
 		getResultTable(params) + 
 		getProportionTable(params) + 
 		getCost(params) + 
+		'<canvas id="chart" width="350" height="200"></canvas>' +
 		'</div></main>';
 	};
-	var addChart = function (data) {
-           var ctx = '<canvas id="appartment-chart" width="600" height="400"></canvas>' ;
-            var myChart = new Chart(ctx, JSON.parse('{"type":"bar","data":{"labels":[5,"3","2"],"datasets":[{"label":"Datasheet 1","data":[12,1,1],"backgroundColor":["rgba(0, 0, 255, 0.8)","rgba(0, 0, 255, 0.8)","rgba(0, 255, 0, 0.8)"]}]},"options":{"responsive":false,"scales":{"yAxes":[{"ticks":{"beginAtZero":true}}],"xAxes":[{"display":false}]}}}'));
-        };
 	var addRecord = function(params){
 		var record = {'Марка бетону ': params.clas, 'Текучість ': params.fluidity, 'Дата': concreteModule.getDate()};
 		
@@ -66,14 +62,12 @@ module.exports = (function(){
 	}
 	};
 	var getResultTable = function (params) {
-		console.log('params rt- ' + params);
 		var paramsLength = concreteModule.paramsLength(params);
 		if(paramsLength === 0){
 				return '';
 		}
 		else if(paramsLength > 0){
 			var data = getViewData(params);
-			console.log('data rt- ' + data);
 			if(!data.length){
 				return [];
 			}
@@ -87,7 +81,7 @@ module.exports = (function(){
 				"<td>" + (data[i].sand * params.quantity) + "</td>" +
 				"<td>" + (data[i].water * params.quantity) + "</td>" +
 				"</tr>";
-				console.log(data[i].cement);
+				//console.log(data[i].cement);
 			}
 
 			return "<div>" + "<h4>Кількість матеріалів, кг</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
@@ -140,54 +134,52 @@ module.exports = (function(){
 	};
 
 	var getChartData = function (params) {
-		console.log('params - ' + params);
-		var chartData = getViewData(params);
-		console.log('chartData - ' + chartData);
-		var counter = 0;
-		var labels = [];
-		var dataStat = [];
-		var backGroundColor = [];
-		if(!chartData.length){
-			return [];
-		}
-		for(var i in chartData){
-			var value = chartData[i];
-			for(var j in value){
-				counter ++;
-				if(counter > 1){
-					labels.push(j);
-					dataStat.push(value[j]) ;
-					backGroundColor.push('rgba(255, 255, 255, 0.8)');
-				}
-				//console.log('counter - ' + counter)
-			}
-		}
-		//console.log("labels - " + labels);
-		//console.log("dataStat - " + dataStat);
+		var classes = concreteModule.getAllClasses();
+	    var classesStat = concreteModule.getClassesStat();
+	    var labels = [];
+	    var dataStat = [];
+	    var backGroundColors = [];
+	    for (var i = 0; i < classes.length; ++i) {
+	        labels.push(classes[i]);
+	        backGroundColors.push('rgba(0, 0, 255, 0.8)');
+	    }
+        console.log(classes);
+	    for (var i = 0; i < classesStat.length; ++i) {
+	        labels.push(classesStat[i]);
+	    }
+	    console.log(classesStat);
+	    return {
+	        type: "bar",
+	        data: {
+	            labels: labels,
+	            datasets: [
+	                {
+	                    label: "Популярність марок бетону",
+	                    data: dataStat,
+	                    backgroundColor: backGroundColors
+	                }
+	            ]
+	        },
+	        options: { 
+            	responsive: false, 
+            	scales: { 
+            	yAxes: [ 
+              	{ 
+                	ticks: { 
+                  	 beginAtZero:true 
+                 	} 
+               	} 
+                ] 
+            	}                   
+        	} 
+        };   
 
-		return {
-			type: "bar",
-			data: {
-				labels: labels,
-				datasets: [
-					{
-
-						label: "Datasheet 1",
-						data: dataStat,
-						backGroundColor: backGroundColor
-					}
-				]
-			},
-			options: {
-				resposive: false
-			}
-		};
 	};    
        
 	
 	var getViewData = function (params){
 		if(!params){
-			return concreteModule.getAll() + "fff";
+			return concreteModule.getAll();
 		}
 		if (params.fluidity && params.clas && params.action == 'search'){
 			return concreteModule.searchByConcreteClass(params.fluidity, params.clas);

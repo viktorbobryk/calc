@@ -38,9 +38,10 @@ table{
 	border-collapse: collapse;
 }
 canvas {
-	 display: table;
+	display: table;
     margin-right: auto;
     margin-left: auto;
+    background-color:#AEADBA; 
 }
  .container{
 	margin:60px;

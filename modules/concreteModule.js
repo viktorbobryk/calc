@@ -20,7 +20,6 @@ module.exports = (function () {
 
 
 	var addRecord = function(record){
-		history = getDataFromFile(historyPath);
 
 		history.push(record);
 		           
@@ -76,6 +75,7 @@ module.exports = (function () {
 				for(var j = 0; j < data[i].classes.length; j++){
 					if(data[i].classes[j].clas === clas){
 						result.push(data[i].classes[j]);
+
 					}
 				};
 			}
@@ -84,7 +84,7 @@ module.exports = (function () {
 		return result;
 		
 	};
-	
+
 	var searchCost = function(){
 		var result = [];
 		for(key in cost){
@@ -108,12 +108,26 @@ module.exports = (function () {
 		for(var i = 0; i < data[0].classes.length; i++){
 			result.push(data[0].classes[i].clas);
 		}
+		//console.log(result);
 		return result;
 	};
 
-	
+	var getClassesStat = function () {
+		var result = [];
+		for(var i = 0; i < history.length; i++){
+			for(var j = 0; j < history[i].length; j++){
+				if(history[i][j] == "Марка бетону "){
+					result.push(history[i][j]);
+				}
+			}
+		}
+		//console.log(result);
+		return result;
+	};
 	var data = getDataFromFile(dbFilePath);
 	var cost = getDataFromFile(costPath);
+	var history = getDataFromFile(historyPath);
+	//console.log(history);
 	
 	return {
 		searchCost: searchCost,
@@ -121,6 +135,7 @@ module.exports = (function () {
 		getAllFluidities: getAllFluidities,
 		getAllClasses: getAllClasses,
 		getAll: getAll,
+		getClassesStat: getClassesStat,
 		getDate: getDate,
 		addRecord: addRecord,
 		validateParams: validateParams,
