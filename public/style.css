@@ -1,6 +1,6 @@
 body{
 	background-image:url(./images/concrete4.jpg);
-	color:#020500;
+	color:#000000;
 	font-size:1.5em;
 }
 h1{
@@ -47,7 +47,8 @@ canvas {
 	margin:60px;
 	border:3px solid black;
 	border-radius:10px;
-	background-color:green;
+	background-image:url(./images/cons3.jpg);
+	background-size: cover;
 }
 
 .message{
@@ -107,6 +108,10 @@ span:hover{
 }
 .help:hover .helptext{
 	visibility: visible;
+}
+.cnv{
+	width: 350px;
+	height: 200px;
 }
 true{
 	display: hidden;

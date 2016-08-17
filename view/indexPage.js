@@ -29,7 +29,7 @@ module.exports = (function(){
 		getResultTable(params) + 
 		getProportionTable(params) + 
 		getCost(params) + 
-		'<canvas id="chart" width="350" height="200"></canvas>' +
+		'<div class="cnv"><canvas id="chart" ></canvas></div>' +
 		'</div></main>';
 	};
 	var addRecord = function(params){
@@ -58,7 +58,7 @@ module.exports = (function(){
 				"</tr>";
 			}
 		
-		return "<div>" + "<h4>Вартість, грн.</h4>" + "<table border='1'>" + result + "</table>" + "</div>";
+		return "<div>" + "<h4>Вартість, грн.</h4>" +"<table border='1'>" +  result + "</table>" + "</div>";
 	}
 	};
 	var getResultTable = function (params) {
@@ -143,11 +143,9 @@ module.exports = (function(){
 	        labels.push(classes[i]);
 	        backGroundColors.push('rgba(0, 0, 255, 0.8)');
 	    }
-        console.log(classes);
-	    for (var i = 0; i < classesStat.length; ++i) {
-	        labels.push(classesStat[i]);
+	    for (var j = 0; j < classesStat.length; ++j) {
+	        dataStat.push(classesStat[j]);
 	    }
-	    console.log(classesStat);
 	    return {
 	        type: "bar",
 	        data: {
@@ -161,7 +159,7 @@ module.exports = (function(){
 	            ]
 	        },
 	        options: { 
-            	responsive: false, 
+            	responsive: true, 
             	scales: { 
             	yAxes: [ 
               	{ 

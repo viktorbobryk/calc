@@ -108,26 +108,75 @@ module.exports = (function () {
 		for(var i = 0; i < data[0].classes.length; i++){
 			result.push(data[0].classes[i].clas);
 		}
-		//console.log(result);
 		return result;
 	};
 
 	var getClassesStat = function () {
 		var result = [];
+		var M100 = 0;
+		var M150 = 0;
+		var M200 = 0;
+		var M250 = 0;
+		var M300 = 0;
+		var M350 = 0;
+		var M400 = 0;
+		var M450 = 0;
+		var M500 = 0;
+		var M550 = 0;
+		var M600 = 0;
 		for(var i = 0; i < history.length; i++){
-			for(var j = 0; j < history[i].length; j++){
-				if(history[i][j] == "Марка бетону "){
-					result.push(history[i][j]);
-				}
-			}
-		}
-		//console.log(result);
+		  if(history[i]["Марка бетону "] === "M100"){
+		  	M100++;
+		  }
+		 else if(history[i]["Марка бетону "] === "M150"){
+		  	M150++;
+		  }
+		  else if(history[i]["Марка бетону "] === "M200"){
+		  	M200++;
+		  }
+		  else if(history[i]["Марка бетону "] === "M250"){
+		  	M250++;
+		  }
+		  else if(history[i]["Марка бетону "] === "M300"){
+		  	M300++;
+		  }
+		  else if(history[i]["Марка бетону "] === "M350"){
+		  	M350++;
+		  }
+		  else if(history[i]["Марка бетону "] === "M400"){
+		  	M400++;
+		  }
+		  else if(history[i]["Марка бетону "] === "M450"){
+		  	M450++;
+		  }
+		  else if(history[i]["Марка бетону "] === "M500"){
+		  	M500++;
+		  }
+		  else if(history[i]["Марка бетону "] === "M550"){
+		  	M550++;
+		  }
+		  else if(history[i]["Марка бетону "] === "M600"){
+		  	M600++;
+		  }
+    	}
+
+    	result.push(M100);
+    	result.push(M150);
+    	result.push(M200);
+    	result.push(M250);
+    	result.push(M300);
+    	result.push(M350);
+    	result.push(M400);
+    	result.push(M450);
+    	result.push(M500);
+    	result.push(M550);
+    	result.push(M600);
+      
 		return result;
 	};
 	var data = getDataFromFile(dbFilePath);
 	var cost = getDataFromFile(costPath);
 	var history = getDataFromFile(historyPath);
-	//console.log(history);
 	
 	return {
 		searchCost: searchCost,
